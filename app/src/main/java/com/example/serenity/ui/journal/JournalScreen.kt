@@ -15,6 +15,7 @@ import com.example.serenity.viewmodel.JournalViewModel
 fun JournalScreen(viewModel: JournalViewModel) {
 
     var text by remember { mutableStateOf("") }
+    val entries by viewModel.entries.collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
 
@@ -25,7 +26,7 @@ fun JournalScreen(viewModel: JournalViewModel) {
 
         OutlinedTextField(
             value = text,
-            onValueChange = { newText -> text = newText },
+            onValueChange = { text = it },
             label = { Text("Write your thoughts...") },
             modifier = Modifier.padding(vertical = 16.dp)
         )
@@ -35,6 +36,13 @@ fun JournalScreen(viewModel: JournalViewModel) {
             text = ""
         }) {
             Text("Save Entry")
+        }
+
+        entries.forEach { entry ->
+            Text(
+                text = entry.text,
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
 }
