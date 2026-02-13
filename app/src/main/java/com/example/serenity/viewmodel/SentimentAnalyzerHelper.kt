@@ -1,32 +1,31 @@
 package com.example.serenity.viewmodel
 
-object SentimentAnalyzerHelper {
+object SentimentAnalyzer {
 
-    private val positiveWords = listOf(
-        "happy", "great", "good", "amazing", "love", "excited",
-        "calm", "relaxed", "content", "proud", "joy", "wonderful"
-    )
+    fun analyze(text: String): Double {
+        val positiveWords = listOf(
+            "happy", "good", "great", "calm", "relaxed", "excited", "love", "hope"
+        )
 
-    private val negativeWords = listOf(
-        "sad", "bad", "upset", "angry", "anxious", "depressed",
-        "worried", "stressed", "tired", "frustrated", "hate",
-        "terrible"
-    )
+        val negativeWords = listOf(
+            "sad", "bad", "angry", "anxious", "tired", "stress", "depressed", "lonely"
+        )
 
-    fun analyze(text: String): Float {
-        val lower = text.lowercase()
+        val words = text.lowercase().split(" ")
 
-        var score = 0f
+        var score = 0
 
-        for (word in positiveWords) {
-            if (lower.contains(word)) score += 1
-        }
-        for (word in negativeWords) {
-            if (lower.contains(word)) score -= 1
+        for (word in words) {
+            if (positiveWords.contains(word)) score++
+            if (negativeWords.contains(word)) score--
         }
 
-        // Normalize score to 0–1 range
-        return ((score + 5) / 10).coerceIn(0f, 1f)
+        // Normalise score to -1.0 → 1.0
+        return when {
+            score > 0 -> 1.0
+            score < 0 -> -1.0
+            else -> 0.0
+        }
     }
 }
 

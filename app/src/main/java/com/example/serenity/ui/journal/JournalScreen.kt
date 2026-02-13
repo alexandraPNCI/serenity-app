@@ -1,7 +1,8 @@
 package com.example.serenity.ui.journal
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -17,7 +18,11 @@ fun JournalScreen(viewModel: JournalViewModel) {
     var text by remember { mutableStateOf("") }
     val entries by viewModel.entries.collectAsState(initial = emptyList())
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
         Text(
             text = "Journal Entry",
@@ -28,21 +33,46 @@ fun JournalScreen(viewModel: JournalViewModel) {
             value = text,
             onValueChange = { text = it },
             label = { Text("Write your thoughts...") },
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
         )
 
-        Button(onClick = {
-            viewModel.addEntry(text)
-            text = ""
-        }) {
+        Button(
+            onClick = {
+                if (text.isNotBlank()) {
+                    viewModel.addEntry(text)
+                    text = ""
+                }
+            }
+        ) {
             Text("Save Entry")
-        }
+        }   
 
-        entries.forEach { entry ->
-            Text(
-                text = entry.text,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LazyColumn {
+            items(entries) { entry ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = entry.text,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    Text(
+                        text = when {
+                            entry.sentimentScore > 0 -> "Mood: Positive"
+                            entry.sentimentScore < 0 -> "Mood: Negative"
+                            else -> "Mood: Neutral"
+                        },
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }

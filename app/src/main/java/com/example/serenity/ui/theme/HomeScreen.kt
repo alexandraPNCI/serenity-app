@@ -55,3 +55,4 @@ fun HomeScreen(onNavigateToJournal: () -> Unit, onNavigateToHistory: () -> Unit)
         }
     }
 }
+                                                                                                            
