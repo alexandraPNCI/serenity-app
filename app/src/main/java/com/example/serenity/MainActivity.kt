@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.room.Room
 import com.example.serenity.data.database.AppDatabase
 import com.example.serenity.data.repository.JournalRepository
-import com.example.serenity.viewmodel.JournalViewModel
+import com.example.serenity.data.repository.UserRepository
 import com.example.serenity.ui.navigation.AppNavigation
 import com.example.serenity.ui.theme.SerenityTheme
+import com.example.serenity.viewmodel.JournalViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -18,14 +20,18 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             AppDatabase::class.java,
             "serenity.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
 
-        val repo = JournalRepository(db.journalDao())
-        val viewModel = JournalViewModel(repo)
+        val journalRepo = JournalRepository(db.journalDao())
+        val userRepo = UserRepository(db.userDao())
+
+        val viewModel = JournalViewModel(journalRepo)
 
         setContent {
             SerenityTheme {
-                AppNavigation(viewModel)
+                AppNavigation(viewModel, userRepo)
             }
         }
     }

@@ -67,6 +67,7 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-task-text:0.4.3")
     implementation("org.tensorflow:tensorflow-lite-support:0.4.3")
 
+
     // ----------- Testing ----------- //
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -76,5 +77,11 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // ----------- Dashboard ----------- //
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("androidx.compose.material:material-icons-extended")
+
+
 }
 
